@@ -4,8 +4,9 @@
   "description": "Distributed election algorithm in Node/Express",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js 1:http://localhost:3000 2:http://localhost:3001",
-    "debug": "nodemon index.js 1:http://localhost:3000 2:http://localhost:3001",
+    "start": "node index.js",
+    "debug": "nodemon index.js",
+    "node": "node node.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/emagdne/bully-algorithm#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.4"
   },
   "devDependencies": {

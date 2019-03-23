@@ -1,34 +1,18 @@
-const express = require('express');
+const { fork } = require('child_process');
+const path = require('path');
 
-(async () => {
-    const nodesDict = {};
-    process.argv.slice(2).forEach(x => {
-        let tokens = x.split(':');
-        let key = parseInt(tokens[0]);
-        tokens.splice(0, 1);
-        let host = new URL(tokens.join(':'));
-        nodesDict[key] = { key, host };
-    });
-    const nodes = Object.values(nodesDict);
+const network = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002'
+].map((x, i) => `${i}:${x}`);
 
-    const hostNode = nodes[0];
-    const neighborNodes = nodes.slice(1);
-
-    const app = express();
-    let coordinatorKey = nodes.reduce((max, x) => Math.max(max, x.key), nodes[0].key);
-    let coordinatorNode = nodesDict[coordinatorKey];
+const processes = [];
+network.forEach((x, i) => {
+    let args = network.slice();
+    args.splice(i, 1);
+    args.unshift(x);
     
-    app.get('/alive', (req, res) => res.sendStatus(200));
-    app.get('/election', (req, res) => {
-        // TODO: implement
-        res.sendStatus(500);
-    });
-    app.get('/victory', (req, res) => {
-        // TODO: implement
-        res.sendStatus(500);
-    });
-    
-    // output logs to files somewhere
-    const port = hostNode.host.port;
-    app.listen(port, () => console.log(`Node listening on port ${port}`));
-})();
+    let process = fork(path.join(__dirname, 'node.js'), args, { detached: false, stdio: 'inherit' });
+    processes.push(process);
+});
