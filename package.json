@@ -4,10 +4,9 @@
   "description": "Distributed election algorithm in Node/Express",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "debug": "nodemon index.js",
-    "node": "node node.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js",
+    "debug": "nodemon src/index.js",
+    "test": "node src/test.js"
   },
   "repository": {
     "type": "git",

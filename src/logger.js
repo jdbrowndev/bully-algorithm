@@ -1,11 +1,12 @@
 class Logger {
-    constructor(node) {
+    constructor(pid, node) {
+        this.pid = pid;
         this.key = node.key;
         this.host = node.host;
     }
 
     log(message) {
-        console.log(`${this.host.href} -- ${message}`);
+        console.log(`(${this.pid}) ${this.host.href} -- ${message}`);
     }
 }
 

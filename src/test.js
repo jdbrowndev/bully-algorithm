@@ -13,6 +13,6 @@ network.forEach((x, i) => {
     args.splice(i, 1);
     args.unshift(x);
     
-    let process = fork(path.join(__dirname, 'node.js'), args, { detached: false, stdio: 'inherit' });
+    let process = fork(path.join(__dirname, 'index.js'), args, { detached: false, stdio: 'inherit' });
     processes.push(process);
 });
