@@ -36,9 +36,8 @@ function registerEndpoints(app, nodes, logger) {
     app.get('/alive', (req, res) => res.sendStatus(200));
 
     app.get('/election', (req, res) => {
-        isAwaitingNewCoordinator = true;
         res.sendStatus(200);
-        processElection(nodes, logger);
+        startElection(nodes, logger);
     });
 
     app.get('/victory', (req, res) => {
@@ -56,15 +55,16 @@ async function pingCoordinator(nodes, logger) {
         logger.log(`Coordinator ${coordinatorNode.host.href} is up`);
     } catch(error) {
         logger.log(`Coordinator ${coordinatorNode.host.href} is down!`);
-        processElection(nodes, logger);
+        startElection(nodes, logger);
     }
 }
 
-async function processElection(nodes, logger) {
+async function startElection(nodes, logger) {
     logger.log('Starting election...');
 
+    isAwaitingNewCoordinator = true;
     let thisNode = nodes[0];
-    let candidates = nodes.sort((a, b) => b.key - a.key); // descending order by key
+    let candidates = nodes.slice().sort((a, b) => b.key - a.key); // descending order by key
 
     for (candidate of candidates) {
         if (candidate.key === thisNode.key) {
@@ -88,7 +88,7 @@ async function processElection(nodes, logger) {
                 // if response received, wait for subsequent victory message (but start over if it never comes)
                 setTimeout(() => {
                     if (isAwaitingNewCoordinator) {
-                        processElection();
+                        startElection();
                     }
                 }, 10000);
 
