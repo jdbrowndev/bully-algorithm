@@ -11,13 +11,11 @@ let isAwaitingNewCoordinator = false;
     const thisNode = nodes[0];
     const logger = new Logger(process.pid, thisNode);
 
-    const initialCoordinatorKey = nodes.reduce((max, x) => Math.max(max, x.key), nodes[0].key);
-    coordinatorNode = nodes.filter(x => x.key === initialCoordinatorKey)[0];
-
     registerEndpoints(app, nodes, logger);
     setInterval(() => pingCoordinator(nodes, logger), 5000);
     
     app.listen(thisNode.host.port, () => logger.log('Up and listening'));
+    startElection(nodes, logger);
 })();
 
 function getNodes(args) {
